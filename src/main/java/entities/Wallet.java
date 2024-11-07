@@ -1,5 +1,7 @@
 package entities;
 
 public class Wallet {
-    private int id;
+    private long id;
+    private double balance;
+    private User user;
 }
