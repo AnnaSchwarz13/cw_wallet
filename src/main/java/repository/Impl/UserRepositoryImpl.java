@@ -3,7 +3,7 @@ package repository.Impl;
 import entities.User;
 import repository.UserRepository;
 
-import javax.sql.DataSource;
+import repository.Datasource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
-    static DataSource ds;
+
     private static final String INSERT_SQL = """
             INSERT INTO wallet_user(username,password)
             VALUES (?, ?)
@@ -33,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User create(User user) throws SQLException {
 
-        try (var statement = ds.getConnection().prepareStatement(INSERT_SQL)) {
+        try (var statement = Datasource.getConnection().prepareStatement(INSERT_SQL)) {
           statement.setString(1, user.getUsername());
           statement.setString(2, user.getPassword());
         }
@@ -42,7 +42,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User read(int id) throws SQLException {
-        try (var statement = ds.getConnection().prepareStatement(FIND_BY_ID_SQL)) {
+        try (var statement = Datasource.getConnection().prepareStatement(FIND_BY_ID_SQL)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
 
@@ -60,7 +60,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(int id) throws SQLException {
-        try (var statement = ds.getConnection().prepareStatement(DELETE_BY_ID_SQL)) {
+        try (var statement = Datasource.getConnection().prepareStatement(DELETE_BY_ID_SQL)) {
             statement.setLong(1, id);
             var affectedRows = statement.executeUpdate();
             System.out.println("# of Contacts deleted: " + affectedRows);
@@ -69,7 +69,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public static List<User> all() {
-        try (var statement = ds.getConnection().prepareStatement(READ_ALL_SQL)) {
+        try (var statement = Datasource.getConnection().prepareStatement(READ_ALL_SQL)) {
             ResultSet resultSet = statement.executeQuery();
             List<User> users = new LinkedList<>();
             while (resultSet.next()) {
