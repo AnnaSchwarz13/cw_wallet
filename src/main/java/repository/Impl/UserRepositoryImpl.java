@@ -6,9 +6,12 @@ import repository.UserRepository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
-    DataSource ds;
+    static DataSource ds;
     private static final String INSERT_SQL = """
             INSERT INTO wallet_user(username,password)
             VALUES (?, ?)
@@ -22,6 +25,9 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String FIND_BY_ID_SQL = """
             SELECT * FROM wallet_user
             WHERE id = ?
+            """;
+    private static final String READ_ALL_SQL = """
+            SELECT * FROM wallet_user
             """;
 
     @Override
@@ -60,5 +66,23 @@ public class UserRepositoryImpl implements UserRepository {
             System.out.println("# of Contacts deleted: " + affectedRows);
         }
 
+    }
+
+    public static List<User> all() {
+        try (var statement = ds.getConnection().prepareStatement(READ_ALL_SQL)) {
+            ResultSet resultSet = statement.executeQuery();
+            List<User> users = new LinkedList<>();
+            while (resultSet.next()) {
+                long userId = resultSet.getLong(1);
+                String username = resultSet.getString(2);
+                String password = resultSet.getString(3);
+                User user = new User(userId, username, password);
+                users.add(user);
+            }
+
+            return new ArrayList<>(users);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

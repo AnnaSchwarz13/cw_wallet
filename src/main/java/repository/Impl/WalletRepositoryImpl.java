@@ -26,6 +26,10 @@ public class WalletRepositoryImpl implements WalletRepository {
             SELECT * FROM wallet
             WHERE id = ?
             """;
+    public static final String UPDATE_WALLET_BALANCE= """
+            UPDATE wallet
+            SET balance = ?
+            """;
 
     @Override
     public void delete(int id) throws SQLException {
@@ -53,8 +57,8 @@ public class WalletRepositoryImpl implements WalletRepository {
 
             Wallet wallet = null;
             if (resultSet.next()) {
-                Long walletId = resultSet.getLong(1);
-                Double balance = resultSet.getDouble(2);
+                long walletId = resultSet.getLong(1);
+                double balance = resultSet.getDouble(2);
                 int userId= resultSet.getInt(3);
                 User walletUser = userRepo.read(userId);
                 wallet = new Wallet(walletId,balance,walletUser);

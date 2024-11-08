@@ -1,7 +1,6 @@
 package repository;
 
 import entities.Transaction;
-import entities.User;
 
 import java.sql.SQLException;
 

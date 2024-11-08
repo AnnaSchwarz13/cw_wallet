@@ -45,8 +45,8 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
             Transaction transaction = null;
             if (resultSet.next()) {
-                Long transactionId = resultSet.getLong(1);
-                Double amount = resultSet.getDouble(2);
+                long transactionId = resultSet.getLong(1);
+                double amount = resultSet.getDouble(2);
                 String transactionType = resultSet.getString(3);
                 int walletId = resultSet.getInt(4);
                 Date transactionDate = resultSet.getDate(5);
