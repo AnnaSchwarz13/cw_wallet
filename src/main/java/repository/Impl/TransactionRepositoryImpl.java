@@ -1,7 +1,6 @@
 package repository.Impl;
 
 import entities.Transaction;
-import entities.User;
 import entities.Wallet;
 import entities.enums.TransactionType;
 import repository.TransactionRepository;
@@ -15,17 +14,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TransactionRepositoryImpl implements TransactionRepository {
-    WalletRepositoryImpl walletRepository = new WalletRepositoryImpl();
 
     static TransactionRepositoryImpl transactionRepositoryImpl = new TransactionRepositoryImpl();
     private static final String INSERT_SQL = """
             INSERT INTO transactions(amount,transaction_type,wallet_id,transaction_date)
             VALUES (?, ? , ? ,?)
-            """;
-
-    private static final String DELETE_BY_ID_SQL = """
-            DELETE FROM transactions
-            WHERE id = ?
             """;
 
     private static final String FIND_BY_ID_SQL = """
@@ -37,14 +30,6 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             WHERE wallet_id = ?
             """;
 
-    @Override
-    public void delete(int id) throws SQLException {
-        try (var statement = Datasource.getConnection().prepareStatement(DELETE_BY_ID_SQL)) {
-            statement.setLong(1, id);
-            var affectedRows = statement.executeUpdate();
-            System.out.println("# of Contacts deleted: " + affectedRows);
-        }
-    }
 
     @Override
     public Transaction read(int id) throws SQLException {

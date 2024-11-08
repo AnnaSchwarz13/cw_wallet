@@ -17,11 +17,6 @@ public class UserRepositoryImpl implements UserRepository {
             VALUES (?, ?)
             """;
 
-    private static final String DELETE_BY_ID_SQL = """
-            DELETE FROM wallet_user
-            WHERE id = ?
-            """;
-
     private static final String FIND_BY_ID_SQL = """
             SELECT * FROM wallet_user
             WHERE id = ?
@@ -56,7 +51,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             User tmpUser = null;
             if (resultSet.next()) {
-                Long userId = resultSet.getLong(1);
+                long userId = resultSet.getLong(1);
                 String username= resultSet.getString(2);
                 String password= resultSet.getString(3);
                 tmpUser = new User(userId,username,password);
@@ -66,15 +61,6 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    @Override
-    public void delete(int id) throws SQLException {
-        try (var statement = Datasource.getConnection().prepareStatement(DELETE_BY_ID_SQL)) {
-            statement.setLong(1, id);
-            var affectedRows = statement.executeUpdate();
-            System.out.println("# of Contacts deleted: " + affectedRows);
-        }
-
-    }
 
     public static List<User> all() {
         try (var statement = Datasource.getConnection().prepareStatement(READ_ALL_SQL)) {

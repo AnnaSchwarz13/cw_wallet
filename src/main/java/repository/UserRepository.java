@@ -7,5 +7,4 @@ import java.sql.SQLException;
 public interface UserRepository {
     User create (User user) throws SQLException;
     User read(int id) throws SQLException;
-    void delete(int id) throws SQLException;
 }

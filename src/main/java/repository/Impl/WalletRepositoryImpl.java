@@ -17,11 +17,6 @@ public class WalletRepositoryImpl implements WalletRepository {
             VALUES (?, ?)
             """;
 
-    private static final String DELETE_BY_ID_SQL = """
-            DELETE FROM wallet
-            WHERE id = ?
-            """;
-
     private static final String FIND_BY_ID_SQL = """
             SELECT * FROM wallet
             WHERE id = ?
@@ -33,15 +28,6 @@ public class WalletRepositoryImpl implements WalletRepository {
             WHERE id = ?
             """;
 
-
-    @Override
-    public void delete(int id) throws SQLException {
-        try (var statement = Datasource.getConnection().prepareStatement(DELETE_BY_ID_SQL)) {
-            statement.setLong(1, id);
-            var affectedRows = statement.executeUpdate();
-            System.out.println("# of Contacts deleted: " + affectedRows);
-        }
-    }
 
     @Override
     public Wallet create(Wallet wallet) throws SQLException {

@@ -15,7 +15,7 @@ static UserService userService = new UserService();
 static WalletRepositoryImpl walletRepository = new WalletRepositoryImpl();
 static Scanner sc = new Scanner(System.in);
 
-public static void main(String[] args) throws SQLException {
+public static void main(String[] ignoredArgs) throws SQLException {
 
     while (true) {
         while (UserService.loggedInUser == null) {

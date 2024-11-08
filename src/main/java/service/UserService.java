@@ -6,7 +6,6 @@ import repository.Impl.UserRepositoryImpl;
 import repository.Impl.WalletRepositoryImpl;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Scanner;
 
 public class UserService {
@@ -29,6 +28,7 @@ public class UserService {
                System.out.println("singUp successfully!");
                break;
            }
+           System.out.println("this username is already in use!");
        }
     }
 
