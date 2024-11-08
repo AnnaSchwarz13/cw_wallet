@@ -13,5 +13,12 @@ public class Wallet {
     private long id;
     private double balance;
     private User user;
-//    private List<Transaction> transactions;
+    private List<Transaction> transactions;
+
+    public Wallet(long id, double balance, User user) {
+        this.balance = balance;
+        this.user = user;
+        this.id = id;
+    }
 }
+

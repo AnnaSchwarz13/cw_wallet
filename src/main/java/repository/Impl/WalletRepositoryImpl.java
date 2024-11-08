@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class WalletRepositoryImpl implements WalletRepository {
-    DataSource ds;
+    static DataSource ds;
     UserRepository userRepo;
     private static final String INSERT_SQL = """
             INSERT INTO Wallet(balance , user_id)
@@ -29,6 +29,7 @@ public class WalletRepositoryImpl implements WalletRepository {
     public static final String UPDATE_WALLET_BALANCE= """
             UPDATE wallet
             SET balance = ?
+            WHERE id = ?
             """;
 
     @Override
@@ -67,5 +68,14 @@ public class WalletRepositoryImpl implements WalletRepository {
             return wallet;
         }
     }
+
+    public static void updateAmount(double amount,long walletId) throws SQLException {
+        try (var statement = ds.getConnection().prepareStatement(UPDATE_WALLET_BALANCE)) {
+            statement.setDouble(1, amount);
+            statement.setLong(2, walletId);
+            ;
+        }
+    }
+
 
 }
