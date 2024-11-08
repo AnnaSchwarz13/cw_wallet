@@ -33,7 +33,10 @@ public class UserRepositoryImpl implements UserRepository {
             SELECT id FROM wallet
             WHERE user_id = ?
             """;
-
+    public static final String FIND_ID_BY_USERNAME_SQL= """
+            SELECT id FROM wallet_user
+            WHERE username = ?
+            """;
     @Override
     public User create(User user) throws SQLException {
 
@@ -103,6 +106,17 @@ public class UserRepositoryImpl implements UserRepository {
             }
 
             return walletId;
+        }
+    }
+    static public long findByUsername(String username) throws SQLException {
+        try (var statement = Datasource.getConnection().prepareStatement(FIND_ID_BY_USERNAME_SQL)){
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            long userId = 0;
+            if (resultSet.next()) {
+                userId = resultSet.getLong(1);
+            }
+            return userId;
         }
     }
 }

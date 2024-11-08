@@ -19,7 +19,7 @@ public static void main(String[] args) throws SQLException {
 
     while (true) {
         while (UserService.loggedInUser == null) {
-            System.out.println("Welcome to Wallet App");
+            System.out.println("\n\nWelcome to Wallet App");
             System.out.println("1.login");
             System.out.println("2.singUp");
             int option = sc.nextInt();
@@ -27,7 +27,7 @@ public static void main(String[] args) throws SQLException {
         }
 
         while (UserService.loggedInUser != null) {
-            System.out.println("Welcome dear " + UserService.loggedInUser.getUsername());
+            System.out.println("\n\nWelcome dear " + UserService.loggedInUser.getUsername());
             System.out.println("1.See your wallet's balance");
             System.out.println("2.Withdraw");
             System.out.println("3.Deposit");

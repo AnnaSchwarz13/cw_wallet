@@ -17,9 +17,11 @@ public class WalletService {
           if(wallet.getBalance() >= amount){
               wallet.setBalance(wallet.getBalance() - amount);
               Transaction transaction = new Transaction(
-                      amount, TransactionType.WITHDRAW, Date.valueOf(LocalDate.now()),wallet);
+                      amount, TransactionType.WITHDRAW, Date.valueOf(LocalDate.now()),wallet.getId());
               transactionRepository.create(transaction);
               WalletRepositoryImpl.updateAmount(wallet.getBalance(),wallet.getId());
+
+              System.out.println("Final balance: "+wallet.getBalance());
           }
        else{
               System.out.println("Insufficient funds");
@@ -30,9 +32,10 @@ public class WalletService {
 
          wallet.setBalance(wallet.getBalance() + amount);
         Transaction transaction = new Transaction(
-                amount, TransactionType.DEPOSIT, Date.valueOf(LocalDate.now()),wallet);
+                amount, TransactionType.DEPOSIT, Date.valueOf(LocalDate.now()),wallet.getId());
         transactionRepository.create(transaction);
         WalletRepositoryImpl.updateAmount(wallet.getBalance(),wallet.getId());
+        System.out.println("Final balance: "+wallet.getBalance());
     }
     public static double displayRecentBalance(Wallet wallet){
         return wallet.getBalance();

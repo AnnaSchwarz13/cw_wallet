@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 public class UserService {
     public static User loggedInUser;
-    List<User> users = UserRepositoryImpl.all() ;
     Scanner scanner = new Scanner(System.in);
     UserRepositoryImpl userRepository = new UserRepositoryImpl();
     WalletRepositoryImpl walletRepository = new WalletRepositoryImpl();
@@ -24,6 +23,7 @@ public class UserService {
                String password = scanner.nextLine();
                User user = new User(username, password);
                user =  userRepository.create(user);
+               user.setId(UserRepositoryImpl.findByUsername(username));
                Wallet wallet = new Wallet(0,user);
                walletRepository.create(wallet);
                System.out.println("singUp successfully!");
@@ -33,22 +33,22 @@ public class UserService {
     }
 
     public void userLogin(String username, String password) {
-        if(!users.isEmpty()){
-            for(User user : users){
+            for(User user : UserRepositoryImpl.all()){
                 if(username.equals(user.getUsername())){
                     if(password.equals(user.getPassword())){
                         loggedInUser = user;
                         System.out.println("Logged in successfully!!");
+                        return;
                     }
                 }
             }
             System.out.println("username or password is incorrect!!");
-        }
+
 
     }
 
     public void userLogout() {
-        if(users.isEmpty()){
+        if(UserRepositoryImpl.all().isEmpty()){
             System.out.println("No user logged in!");
         }
         else{

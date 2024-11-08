@@ -7,7 +7,6 @@ import entities.enums.TransactionType;
 import repository.TransactionRepository;
 import repository.Datasource;
 
-import java.lang.annotation.Target;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,8 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TransactionRepositoryImpl implements TransactionRepository {
+    WalletRepositoryImpl walletRepository = new WalletRepositoryImpl();
 
-    WalletRepositoryImpl walletRepositoryImpl = new WalletRepositoryImpl();
     static TransactionRepositoryImpl transactionRepositoryImpl = new TransactionRepositoryImpl();
     private static final String INSERT_SQL = """
             INSERT INTO transactions(amount,transaction_type,wallet_id,transaction_date)
@@ -33,7 +32,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             SELECT * FROM transactions
             WHERE id = ?
             """;
-    private static final String FIND_ALL_TRANSACTION= """
+    private static final String FIND_ALL_TRANSACTION = """
             SELECT * FROM transactions
             WHERE wallet_id = ?
             """;
@@ -60,8 +59,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 String transactionType = resultSet.getString(3);
                 int walletId = resultSet.getInt(4);
                 Date transactionDate = resultSet.getDate(5);
-                Wallet wallet = walletRepositoryImpl.read(walletId);
-                transaction = new Transaction(transactionId,amount,TransactionType.valueOf(transactionType),transactionDate,wallet);
+                transaction = new Transaction(transactionId, amount, TransactionType.valueOf(transactionType), transactionDate, walletId);
             }
             return transaction;
 
@@ -73,7 +71,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         try (var statement = Datasource.getConnection().prepareStatement(INSERT_SQL)) {
             statement.setDouble(1, transaction.getAmount());
             statement.setString(2, String.valueOf(transaction.getType()));
-            statement.setLong(3, transaction.getWallet().getId());
+            statement.setLong(3, transaction.getWalletId());
             statement.setDate(4, (Date) transaction.getDate());
             statement.execute();
         }

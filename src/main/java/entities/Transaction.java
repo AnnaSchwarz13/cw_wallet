@@ -15,12 +15,12 @@ public class Transaction {
  private double amount;
  private TransactionType type;
  private Date date;
- private Wallet wallet;
+ private long walletId;
 
- public Transaction(double amount, TransactionType type, Date date, Wallet wallet) {
+ public Transaction(double amount, TransactionType type, Date date, long walletId) {
   this.amount = amount;
   this.type = type;
   this.date = date;
-  this.wallet = wallet;
+  this.walletId = walletId;
  }
 }

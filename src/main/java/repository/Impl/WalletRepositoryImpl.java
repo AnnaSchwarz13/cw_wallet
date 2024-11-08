@@ -27,11 +27,12 @@ public class WalletRepositoryImpl implements WalletRepository {
             WHERE id = ?
             """;
 
-    public static final String UPDATE_WALLET_BALANCE= """
+    public static final String UPDATE_WALLET_BALANCE = """
             UPDATE wallet
             SET balance = ?
             WHERE id = ?
             """;
+
 
     @Override
     public void delete(int id) throws SQLException {
@@ -62,9 +63,9 @@ public class WalletRepositoryImpl implements WalletRepository {
             if (resultSet.next()) {
                 long walletId = resultSet.getLong(1);
                 double balance = resultSet.getDouble(2);
-                int userId= resultSet.getInt(3);
+                int userId = resultSet.getInt(3);
                 User walletUser = userRepo.read(userId);
-                wallet = new Wallet(walletId,balance,walletUser);
+                wallet = new Wallet(walletId, balance, walletUser);
                 wallet.setTransactions(TransactionRepositoryImpl.allTransactions(wallet));
             }
 
@@ -72,7 +73,7 @@ public class WalletRepositoryImpl implements WalletRepository {
         }
     }
 
-    public static void updateAmount(double amount,long walletId) throws SQLException {
+    public static void updateAmount(double amount, long walletId) throws SQLException {
         try (var statement = Datasource.getConnection().prepareStatement(UPDATE_WALLET_BALANCE)) {
             statement.setDouble(1, amount);
             statement.setLong(2, walletId);
@@ -80,5 +81,6 @@ public class WalletRepositoryImpl implements WalletRepository {
 
         }
     }
+
 
 }
