@@ -40,6 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
         try (var statement = Datasource.getConnection().prepareStatement(INSERT_SQL)) {
           statement.setString(1, user.getUsername());
           statement.setString(2, user.getPassword());
+          statement.execute();
         }
         return user;
     }
@@ -93,7 +94,9 @@ public class UserRepositoryImpl implements UserRepository {
     public static long findWalletIdByUserId(long userId)throws SQLException {
 
         try (var statement = Datasource.getConnection().prepareStatement(FIND_WALLET)) {
+            statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
+
             long walletId=0;
             if (resultSet.next()) {
                 walletId = resultSet.getLong(1);

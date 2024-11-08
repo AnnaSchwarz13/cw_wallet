@@ -17,24 +17,27 @@ static Scanner sc = new Scanner(System.in);
 
 public static void main(String[] args) throws SQLException {
 
-    while (UserService.loggedInUser == null) {
-        System.out.println("Welcome to Wallet App");
-        System.out.println("1.login");
-        System.out.println("2.singUp");
-        int option = sc.nextInt();
-        loginMenu(option);
+    while (true) {
+        while (UserService.loggedInUser == null) {
+            System.out.println("Welcome to Wallet App");
+            System.out.println("1.login");
+            System.out.println("2.singUp");
+            int option = sc.nextInt();
+            loginMenu(option);
+        }
+
+        while (UserService.loggedInUser != null) {
+            System.out.println("Welcome dear " + UserService.loggedInUser.getUsername());
+            System.out.println("1.See your wallet's balance");
+            System.out.println("2.Withdraw");
+            System.out.println("3.Deposit");
+            System.out.println("4.See wallet's transactions");
+            System.out.println("5.Logout");
+            int option = sc.nextInt();
+            loggedInMenu(option);
+        }
+
     }
-
-    while (UserService.loggedInUser != null) {
-        System.out.println("Welcome dear " + UserService.loggedInUser.getUsername());
-        System.out.println("1.See your wallet's balance");
-        System.out.println("2.Withdraw");
-        System.out.println("3.Deposit");
-        System.out.println("4.See wallet's transactions");
-        System.out.println("5.Logout");
-
-    }
-
 }
 
 public static void loginMenu(int option) throws SQLException {
@@ -58,6 +61,9 @@ public static void loggedInMenu(int option) throws SQLException {
 
         if (walletId != 0) {
             System.out.println("Your wallet balance is : \n" + WalletService.displayRecentBalance(wallet));
+        }
+        else{
+            System.out.println("you have no wallet yet");
         }
     } else if (option == 2) {
         System.out.println("Enter amount to withdraw");

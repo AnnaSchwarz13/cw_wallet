@@ -75,6 +75,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             statement.setString(2, String.valueOf(transaction.getType()));
             statement.setLong(3, transaction.getWallet().getId());
             statement.setDate(4, (Date) transaction.getDate());
+            statement.execute();
         }
         return transaction;
     }

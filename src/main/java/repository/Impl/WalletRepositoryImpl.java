@@ -47,6 +47,7 @@ public class WalletRepositoryImpl implements WalletRepository {
         try (var statement = Datasource.getConnection().prepareStatement(INSERT_SQL)) {
             statement.setDouble(1, wallet.getBalance());
             statement.setLong(2, wallet.getUser().getId());
+            statement.execute();
         }
         return wallet;
     }
@@ -75,6 +76,7 @@ public class WalletRepositoryImpl implements WalletRepository {
         try (var statement = Datasource.getConnection().prepareStatement(UPDATE_WALLET_BALANCE)) {
             statement.setDouble(1, amount);
             statement.setLong(2, walletId);
+            statement.execute();
 
         }
     }

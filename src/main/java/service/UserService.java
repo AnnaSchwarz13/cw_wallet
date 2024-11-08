@@ -26,6 +26,7 @@ public class UserService {
                user =  userRepository.create(user);
                Wallet wallet = new Wallet(0,user);
                walletRepository.create(wallet);
+               System.out.println("singUp successfully!");
                break;
            }
        }
@@ -41,6 +42,7 @@ public class UserService {
                     }
                 }
             }
+            System.out.println("username or password is incorrect!!");
         }
 
     }

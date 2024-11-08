@@ -15,7 +15,7 @@ public class Datasource {
     }
 
     static {
-        final String DB_URL ="jdbc:postgresql://localhost:5432/postgres";
+        final String DB_URL ="jdbc:postgresql://localhost:5432/wallet";
         final String USER = "postgres";
         final String PASS = "6250074678";
         try {
