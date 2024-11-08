@@ -19,8 +19,11 @@ public class WalletService {
               Transaction transaction = new Transaction(
                       amount, TransactionType.WITHDRAW, Date.valueOf(LocalDate.now()),wallet);
               transactionRepository.create(transaction);
+              WalletRepositoryImpl.updateAmount(wallet.getBalance(),wallet.getId());
           }
-        WalletRepositoryImpl.updateAmount(wallet.getBalance(),wallet.getId());
+       else{
+              System.out.println("Insufficient funds");
+          }
 
     }
     public static void deposit(double amount,Wallet wallet) throws SQLException {
