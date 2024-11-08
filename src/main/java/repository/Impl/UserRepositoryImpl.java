@@ -29,6 +29,10 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String READ_ALL_SQL = """
             SELECT * FROM wallet_user
             """;
+    private static final String FIND_WALLET = """
+            SELECT id FROM wallet
+            WHERE user_id = ?
+            """;
 
     @Override
     public User create(User user) throws SQLException {
@@ -83,6 +87,19 @@ public class UserRepositoryImpl implements UserRepository {
             return new ArrayList<>(users);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static long findWalletIdByUserId(long userId)throws SQLException {
+
+        try (var statement = Datasource.getConnection().prepareStatement(FIND_WALLET)) {
+            ResultSet resultSet = statement.executeQuery();
+            long walletId=0;
+            if (resultSet.next()) {
+                walletId = resultSet.getLong(1);
+            }
+
+            return walletId;
         }
     }
 }

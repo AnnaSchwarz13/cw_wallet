@@ -11,9 +11,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class WalletService {
-    TransactionRepositoryImpl transactionRepository = new TransactionRepositoryImpl();
+    static TransactionRepositoryImpl transactionRepository = new TransactionRepositoryImpl();
 
-    public void withdraw(double amount,Wallet wallet) throws SQLException {
+    public static void withdraw(double amount,Wallet wallet) throws SQLException {
           if(wallet.getBalance() >= amount){
               wallet.setBalance(wallet.getBalance() - amount);
               Transaction transaction = new Transaction(
@@ -23,7 +23,7 @@ public class WalletService {
         WalletRepositoryImpl.updateAmount(wallet.getBalance(),wallet.getId());
 
     }
-    public void deposit(double amount,Wallet wallet) throws SQLException {
+    public static void deposit(double amount,Wallet wallet) throws SQLException {
 
          wallet.setBalance(wallet.getBalance() + amount);
         Transaction transaction = new Transaction(
@@ -31,7 +31,7 @@ public class WalletService {
         transactionRepository.create(transaction);
         WalletRepositoryImpl.updateAmount(wallet.getBalance(),wallet.getId());
     }
-    public double displayRecentBalance(Wallet wallet){
+    public static double displayRecentBalance(Wallet wallet){
         return wallet.getBalance();
     }
 }

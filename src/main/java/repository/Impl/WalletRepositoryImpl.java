@@ -2,7 +2,6 @@ package repository.Impl;
 
 import entities.User;
 import entities.Wallet;
-import repository.TransactionRepository;
 import repository.UserRepository;
 import repository.WalletRepository;
 import repository.Datasource;
@@ -27,6 +26,7 @@ public class WalletRepositoryImpl implements WalletRepository {
             SELECT * FROM wallet
             WHERE id = ?
             """;
+
     public static final String UPDATE_WALLET_BALANCE= """
             UPDATE wallet
             SET balance = ?
@@ -75,9 +75,8 @@ public class WalletRepositoryImpl implements WalletRepository {
         try (var statement = Datasource.getConnection().prepareStatement(UPDATE_WALLET_BALANCE)) {
             statement.setDouble(1, amount);
             statement.setLong(2, walletId);
-            ;
+
         }
     }
-
 
 }

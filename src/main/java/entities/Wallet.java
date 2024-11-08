@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,6 +20,12 @@ public class Wallet {
         this.balance = balance;
         this.user = user;
         this.id = id;
+    }
+
+    public Wallet(double balance, User user) {
+        this.balance = balance;
+        this.user = user;
+        this.transactions = new ArrayList<>();
     }
 }
 
