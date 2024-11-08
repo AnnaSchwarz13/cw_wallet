@@ -17,4 +17,10 @@ public class Transaction {
  private Date date;
  private Wallet wallet;
 
+ public Transaction(double amount, TransactionType type, Date date, Wallet wallet) {
+  this.amount = amount;
+  this.type = type;
+  this.date = date;
+  this.wallet = wallet;
+ }
 }

@@ -2,6 +2,7 @@ package repository.Impl;
 
 import entities.User;
 import entities.Wallet;
+import repository.TransactionRepository;
 import repository.UserRepository;
 import repository.WalletRepository;
 import repository.Datasource;
@@ -63,6 +64,7 @@ public class WalletRepositoryImpl implements WalletRepository {
                 int userId= resultSet.getInt(3);
                 User walletUser = userRepo.read(userId);
                 wallet = new Wallet(walletId,balance,walletUser);
+                wallet.setTransactions(TransactionRepositoryImpl.allTransactions(wallet));
             }
 
             return wallet;

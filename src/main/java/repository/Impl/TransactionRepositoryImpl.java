@@ -1,17 +1,24 @@
 package repository.Impl;
 
 import entities.Transaction;
+import entities.User;
 import entities.Wallet;
 import entities.enums.TransactionType;
 import repository.TransactionRepository;
 import repository.Datasource;
+
+import java.lang.annotation.Target;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TransactionRepositoryImpl implements TransactionRepository {
 
     WalletRepositoryImpl walletRepositoryImpl = new WalletRepositoryImpl();
+    static TransactionRepositoryImpl transactionRepositoryImpl = new TransactionRepositoryImpl();
     private static final String INSERT_SQL = """
             INSERT INTO transactions(amount,transaction_type,wallet_id,transaction_date)
             VALUES (?, ? , ? ,?)
@@ -25,6 +32,10 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     private static final String FIND_BY_ID_SQL = """
             SELECT * FROM transactions
             WHERE id = ?
+            """;
+    private static final String FIND_ALL_TRANSACTION= """
+            SELECT * FROM transactions
+            WHERE wallet_id = ?
             """;
 
     @Override
@@ -66,5 +77,22 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             statement.setDate(4, (Date) transaction.getDate());
         }
         return transaction;
+    }
+
+    public static List<Transaction> allTransactions(Wallet wallet)  {
+        try (var statement = Datasource.getConnection().prepareStatement(FIND_ALL_TRANSACTION)) {
+            statement.setDouble(1, wallet.getId());
+            ResultSet resultSet = statement.executeQuery();
+            List<Transaction> transactions = new LinkedList<>();
+            while (resultSet.next()) {
+                Transaction transaction = transactionRepositoryImpl.read(resultSet.getInt(1));
+                transactions.add(transaction);
+            }
+
+            return new ArrayList<>(transactions);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
