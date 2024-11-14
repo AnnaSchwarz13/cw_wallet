@@ -44,7 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User read(int id) throws SQLException {
+    public User read(long id) throws SQLException {
         try (var statement = Datasource.getConnection().prepareStatement(FIND_BY_ID_SQL)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -61,8 +61,8 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-
-    public static List<User> all() {
+@Override
+    public List<User> all() {
         try (var statement = Datasource.getConnection().prepareStatement(READ_ALL_SQL)) {
             ResultSet resultSet = statement.executeQuery();
             List<User> users = new LinkedList<>();
@@ -80,7 +80,8 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    public static long findWalletIdByUserId(long userId)throws SQLException {
+    @Override
+    public long findWalletIdByUserId(long userId)throws SQLException {
 
         try (var statement = Datasource.getConnection().prepareStatement(FIND_WALLET)) {
             statement.setLong(1, userId);
@@ -94,7 +95,8 @@ public class UserRepositoryImpl implements UserRepository {
             return walletId;
         }
     }
-    static public long findByUsername(String username) throws SQLException {
+    @Override
+     public long findByUsername(String username) throws SQLException {
         try (var statement = Datasource.getConnection().prepareStatement(FIND_ID_BY_USERNAME_SQL)){
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();

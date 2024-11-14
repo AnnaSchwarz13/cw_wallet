@@ -1,8 +1,5 @@
 import entities.Transaction;
 import entities.Wallet;
-import repository.Impl.TransactionRepositoryImpl;
-import repository.Impl.UserRepositoryImpl;
-import repository.Impl.WalletRepositoryImpl;
 import service.Impl.TransactionServiceImpl;
 import service.Impl.UserServiceImpl;
 import service.Impl.WalletServiceImpl;
@@ -14,7 +11,6 @@ import java.util.Scanner;
 static UserServiceImpl userServiceImpl = new UserServiceImpl();
 static TransactionServiceImpl transactionService = new TransactionServiceImpl();
 static WalletServiceImpl walletServiceImpl = new WalletServiceImpl();
-static WalletRepositoryImpl walletRepository = new WalletRepositoryImpl();
 static Scanner sc = new Scanner(System.in);
 
 public static void main(String[] ignoredArgs) throws SQLException {
@@ -57,12 +53,11 @@ public static void loginMenu(int option) throws SQLException {
 }
 
 public static void loggedInMenu(int option) throws SQLException {
-    int walletId = (int) UserRepositoryImpl.findWalletIdByUserId(UserServiceImpl.loggedInUser.getId());
-    Wallet wallet = walletRepository.read(walletId);
+    Wallet wallet = walletServiceImpl.getWalletById(userServiceImpl.getLoggedInUserWalletId());
     if (option == 1) {
 
-        if (walletId != 0) {
-            System.out.println("Your wallet balance is : \n" + WalletServiceImpl.displayRecentBalance(wallet));
+        if (userServiceImpl.getLoggedInUserWalletId() != 0) {
+            System.out.println("Your wallet balance is : \n" + walletServiceImpl.displayRecentBalance(wallet));
         }
         else{
             System.out.println("you have no wallet yet");
@@ -76,7 +71,7 @@ public static void loggedInMenu(int option) throws SQLException {
         double amount = sc.nextDouble();
         walletServiceImpl.deposit(amount, wallet);
     } else if (option == 4) {
-        List<Transaction> transactions = TransactionRepositoryImpl.allTransactions(wallet);
+        List<Transaction> transactions = transactionService.getTransactions(wallet);
         transactionService.displayTransactions(transactions);
     } else if (option == 5) {
         userServiceImpl.userLogout();

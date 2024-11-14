@@ -63,7 +63,8 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         return transaction;
     }
 
-    public static List<Transaction> allTransactions(Wallet wallet) {
+    @Override
+    public List<Transaction> allTransactions(Wallet wallet) {
         try (var statement = Datasource.getConnection().prepareStatement(FIND_ALL_TRANSACTION)) {
             statement.setDouble(1, wallet.getId());
             ResultSet resultSet = statement.executeQuery();

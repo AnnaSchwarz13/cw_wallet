@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class WalletRepositoryImpl implements WalletRepository {
-
+    TransactionRepositoryImpl transactionRepository = new TransactionRepositoryImpl();
     UserRepository userRepo = new UserRepositoryImpl();
     private static final String INSERT_SQL = """
             INSERT INTO Wallet(balance , user_id)
@@ -40,7 +40,7 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public Wallet read(int id) throws SQLException {
+    public Wallet read(long id) throws SQLException {
         try (var statement = Datasource.getConnection().prepareStatement(FIND_BY_ID_SQL)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -52,14 +52,14 @@ public class WalletRepositoryImpl implements WalletRepository {
                 int userId = resultSet.getInt(3);
                 User walletUser = userRepo.read(userId);
                 wallet = new Wallet(walletId, balance, walletUser);
-                wallet.setTransactions(TransactionRepositoryImpl.allTransactions(wallet));
+                wallet.setTransactions(transactionRepository.allTransactions(wallet));
             }
 
             return wallet;
         }
     }
-
-    public static void updateAmount(double amount, long walletId) throws SQLException {
+@Override
+    public void updateAmount(double amount, long walletId) throws SQLException {
         try (var statement = Datasource.getConnection().prepareStatement(UPDATE_WALLET_BALANCE)) {
             statement.setDouble(1, amount);
             statement.setLong(2, walletId);
