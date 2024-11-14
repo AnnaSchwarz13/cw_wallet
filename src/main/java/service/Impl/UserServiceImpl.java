@@ -2,42 +2,35 @@ package service.Impl;
 
 import entities.User;
 import entities.Wallet;
+import exceptions.UserException;
 import repository.Impl.UserRepositoryImpl;
 import repository.Impl.WalletRepositoryImpl;
 import service.UserService;
 
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class UserServiceImpl implements UserService {
     public static User loggedInUser;
-    Scanner scanner = new Scanner(System.in);
     UserRepositoryImpl userRepository = new UserRepositoryImpl();
     WalletRepositoryImpl walletRepository = new WalletRepositoryImpl();
     AuthenticationServiceImpl authenticationService = new AuthenticationServiceImpl();
 
     @Override
-    public void userSignUp() throws SQLException {
-        while (true) {
-            System.out.println("Enter username:");
-            String username = scanner.nextLine();
-            if (authenticationService.isUsernameNew(username)) {
-                System.out.println("Enter password:");
-                String password = scanner.nextLine();
-                User user = new User(username, password);
+    public void userSignUp(User userIn) throws SQLException, UserException {
+                User user = new User(userIn.getUsername(), userIn.getPassword());
+                if(!authenticationService.isUsernameNew(userIn.getUsername())) {
+                    throw new UserException("Username is already exist");
+                }
                 user = userRepository.create(user);
-                user.setId(userRepository.findByUsername(username));
+                user.setId(userRepository.findByUsername(userIn.getUsername()));
                 Wallet wallet = new Wallet(0, user);
                 walletRepository.create(wallet);
                 System.out.println("singUp successfully!");
-                break;
-            }
-            System.out.println("this username is already in use!");
         }
-    }
+
 
     @Override
-    public void userLogin(String username, String password) {
+    public void userLogin(String username, String password) throws UserException {
         for (User user : userRepository.all()) {
             if (username.equals(user.getUsername())) {
                 if (password.equals(user.getPassword())) {
@@ -47,14 +40,12 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
-        System.out.println("username or password is incorrect!!");
-
-
+        throw new UserException("Username or password is wrong!");
     }
 
-    public void userLogout() {
+    public void userLogout() throws UserException {
         if (userRepository.all().isEmpty()) {
-            System.out.println("No user logged in!");
+            throw new UserException("no user loggedIn");
         } else {
             loggedInUser = null;
         }

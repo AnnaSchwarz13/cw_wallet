@@ -1,11 +1,14 @@
 package service;
 
+import entities.User;
+import exceptions.UserException;
+
 import java.sql.SQLException;
 
 public interface UserService {
-    void userSignUp() throws SQLException;
+    void userSignUp(User user) throws SQLException, UserException;
 
-    void userLogin(String username, String password);
+    void userLogin(String username, String password) throws UserException;
 
-    void userLogout();
+    void userLogout() throws UserException;
 }

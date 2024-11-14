@@ -3,6 +3,7 @@ package service.Impl;
 import entities.Transaction;
 import entities.Wallet;
 import entities.enums.TransactionType;
+import exceptions.WalletExceptions;
 import repository.Impl.TransactionRepositoryImpl;
 import repository.Impl.WalletRepositoryImpl;
 import service.WalletService;
@@ -16,18 +17,17 @@ public class WalletServiceImpl implements WalletService {
     static WalletRepositoryImpl walletRepository = new WalletRepositoryImpl();
 
     @Override
-    public void withdraw(double amount, Wallet wallet) throws SQLException {
-        if (wallet.getBalance() >= amount) {
+    public void withdraw(double amount, Wallet wallet) throws SQLException, WalletExceptions {
+            if(wallet.getBalance() < amount) {
+                throw new WalletExceptions("Not enough balance");
+            }
             wallet.setBalance(wallet.getBalance() - amount);
             Transaction transaction = new Transaction(
                     amount, TransactionType.WITHDRAW, Date.valueOf(LocalDate.now()), wallet.getId());
             transactionRepository.create(transaction);
             walletRepository.updateAmount(wallet.getBalance(), wallet.getId());
-
             System.out.println("Final balance: " + wallet.getBalance());
-        } else {
-            System.out.println("Insufficient funds");
-        }
+
 
     }
 
