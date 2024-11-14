@@ -21,7 +21,7 @@ public class Main {
     static WalletServiceImpl walletServiceImpl = new WalletServiceImpl();
     static Scanner sc = new Scanner(System.in);
 
-    public static void main(String[] ignoredArgs) throws SQLException {
+    public static void main(String[] ignoredArgs) throws SQLException, WalletExceptions{
 
         while (true) {
             while (UserServiceImpl.loggedInUser == null) {
@@ -72,13 +72,11 @@ public class Main {
         }
     }
 
-    public static void loggedInMenu(int option) throws SQLException{
+    public static void loggedInMenu(int option) throws SQLException, WalletExceptions {
         Wallet wallet = walletServiceImpl.getWalletById(userServiceImpl.getLoggedInUserWalletId());
         if (option == 1) {
             try {
-                if (userServiceImpl.getLoggedInUserWalletId() == 0) {
-                    throw new WalletExceptions("you have no wallet yet");
-                }
+                userServiceImpl.getLoggedInUserWalletId();
                 System.out.println("Your wallet balance is : \n" + walletServiceImpl.displayRecentBalance(wallet));
             } catch (WalletExceptions e) {
                 System.out.println(e.getMessage());
@@ -97,8 +95,12 @@ public class Main {
             double amount = sc.nextDouble();
             walletServiceImpl.deposit(amount, wallet);
         } else if (option == 4) {
-            List<Transaction> transactions = transactionService.getTransactions(wallet);
-            displayTransactions(transactions);
+            try {
+                List<Transaction> transactions = transactionService.getTransactions(wallet);
+                displayTransactions(transactions);
+            }catch (TransactionException e) {
+                System.out.println(e.getMessage());
+            }
         } else if (option == 5) {
             try {
                 userServiceImpl.userLogout();
@@ -110,18 +112,11 @@ public class Main {
     }
 
     public static void displayTransactions(List<Transaction> transactions) {//display should be in main
-        try {
-            if (transactions.isEmpty()) {
-                throw new TransactionException("No transactions found");
-            }
             for (Transaction transaction : transactions) {
                 System.out.println("----------");
                 System.out.println(transaction.getType());
                 System.out.println(transaction.getAmount());
                 System.out.println(transaction.getDate());
             }
-        }catch (TransactionException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

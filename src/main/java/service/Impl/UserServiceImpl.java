@@ -3,6 +3,7 @@ package service.Impl;
 import entities.User;
 import entities.Wallet;
 import exceptions.UserException;
+import exceptions.WalletExceptions;
 import repository.Impl.UserRepositoryImpl;
 import repository.Impl.WalletRepositoryImpl;
 import service.UserService;
@@ -52,7 +53,10 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public long getLoggedInUserWalletId() throws SQLException {
+    public long getLoggedInUserWalletId() throws SQLException, WalletExceptions {
+        if(userRepository.findWalletIdByUserId(loggedInUser.getId())==0){
+            throw new WalletExceptions("you have no wallet yet");
+        }
         return userRepository.findWalletIdByUserId(loggedInUser.getId());
     }
 
